@@ -8,9 +8,9 @@ Bu proje **Nesne Tabanlı Programlama (YMH 219)** dersi ek uygulama ödevi kapsa
 
 ## Ekran Görüntüleri
 
-| Başlangıç | Oyun sırasında | Oyun bitti |
-|---|---|---|
-| ![Başlangıç ekranı](screenshots/01-baslangic.png) | ![Oyun sırasında](screenshots/02-oyun.png) | ![Game Over ekranı](screenshots/03-game-over.png) |
+| Başlangıç | Oyun sırasında | Duraklatıldı | Oyun bitti |
+|---|---|---|---|
+| ![Başlangıç ekranı](screenshots/01-baslangic.png) | ![Oyun sırasında](screenshots/02-oyun.png) | ![Duraklatma ekranı](screenshots/04-duraklatildi.png) | ![Game Over ekranı](screenshots/03-game-over.png) |
 
 ## Kullanılan Teknolojiler
 
@@ -37,6 +37,7 @@ dotnet run --project FlappyBird
 | Tuş | İşlev |
 |---|---|
 | `Space` / `↑` / `W` | Zıpla (ilk basışta oyun başlar) |
+| `P` / `Esc` | Oyunu duraklat / devam ettir |
 | `Enter` / `R` | Oyun bittiyse yeniden başlat |
 | **Yeni Oyun** butonu | Oyunu istediğiniz an baştan başlatır |
 
@@ -49,6 +50,7 @@ dotnet run --project FlappyBird
 - **Seviye sistemi:** her 5 puanda bir seviye atlanır ve oyun hızlanır
 - **En yüksek skor** `highscore.txt` dosyasında saklanır, oyun kapatılsa da kaybolmaz
 - Ekranda seviye, hız, skor ve en yüksek skor bilgisi
+- **Duraklatma:** `P` / `Esc` ile oyun durur; pencere arka plana geçince oyun otomatik duraklar
 
 ## Proje Yapısı (Sınıflar)
 
@@ -56,7 +58,7 @@ dotnet run --project FlappyBird
 |---|---|
 | `Bird.cs` | Kuşun konumu, hızı, yer çekimi ve zıplama hareketi |
 | `PipePair.cs` | Üst-alt boru çifti: hareket, ekrandan çıkma ve çarpışma kontrolü |
-| `GameState.cs` | Oyun durumları: `Ready`, `Playing`, `GameOver` |
+| `GameState.cs` | Oyun durumları: `Ready`, `Playing`, `Paused`, `GameOver` |
 | `Game.cs` | Oyun kuralları: döngü adımı, skor, seviye/hız, çarpışma, yeniden başlatma |
 | `HighScoreStore.cs` | En yüksek skoru dosyaya yazma ve dosyadan okuma |
 | `MainForm.cs` | Klavye ve Timer olaylarını `Game` sınıfına iletir, oyunu çizer |
@@ -68,4 +70,4 @@ Form yalnızca olayları yakalar ve çizim yapar; oyunun tüm kuralları `Game` 
 - Ses efekti yoktur.
 - Grafikler resim dosyası yerine basit şekillerle (elips, dikdörtgen) çizilmektedir.
 - Pencere boyutu sabittir (420 × 640).
-- İleride eklenebilecekler: ses efektleri, zorluk seçimi, duraklatma (pause) tuşu.
+- İleride eklenebilecekler: ses efektleri, zorluk seçimi.

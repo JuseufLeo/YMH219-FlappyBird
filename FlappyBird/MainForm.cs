@@ -26,6 +26,7 @@ namespace FlappyBird
         {
             InitializeComponent();
             game = new Game(ClientSize.Width, ClientSize.Height);
+            Deactivate += (s, e) => { game.Pause(); Invalidate(); };   // başka pencereye geçilince duraklat
             gameTimer.Start();
         }
 
@@ -45,6 +46,12 @@ namespace FlappyBird
                 case Keys.Up:
                 case Keys.W:
                     game.Flap();
+                    e.SuppressKeyPress = true;
+                    break;
+                case Keys.P:
+                case Keys.Escape:
+                    game.TogglePause();
+                    Invalidate();
                     e.SuppressKeyPress = true;
                     break;
                 case Keys.Enter:
@@ -78,6 +85,9 @@ namespace FlappyBird
 
             if (game.State == GameState.Ready)
                 DrawMessage(g, 370, "Hazır mısın?", "Zıplamak için SPACE / ↑ tuşuna bas");
+            else if (game.State == GameState.Paused)
+                DrawMessage(g, 180, "DURAKLATILDI",
+                    $"Skor: {game.Score}    Seviye: {game.Level}\nDevam etmek için P ya da ESC tuşuna bas");
             else if (game.State == GameState.GameOver)
                 DrawMessage(g, 180, "GAME OVER",
                     $"Skor: {game.Score}    En yüksek: {game.HighScore}\nYeniden başlamak için ENTER ya da Yeni Oyun");
@@ -147,6 +157,8 @@ namespace FlappyBird
             // Durum bilgileri sol üstte
             g.DrawString($"Seviye: {game.Level}   Hız: {game.Speed:0.0}", infoFont, Brushes.Black, 10, 8);
             g.DrawString($"En yüksek: {game.HighScore}", infoFont, Brushes.Black, 10, 28);
+            if (game.State == GameState.Playing)
+                g.DrawString("P: Duraklat", infoFont, Brushes.Black, game.Width - 95, 8);
         }
 
         private void DrawMessage(Graphics g, int top, string title, string text)

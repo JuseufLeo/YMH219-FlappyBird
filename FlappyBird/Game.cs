@@ -54,11 +54,30 @@ namespace FlappyBird
         /// <summary>Oyuncu zıplama tuşuna bastığında çağrılır.</summary>
         public void Flap()
         {
-            if (State == GameState.GameOver)
+            if (State == GameState.GameOver || State == GameState.Paused)
                 return;
             if (State == GameState.Ready)
                 State = GameState.Playing;
             Bird.Flap();
+        }
+
+        /// <summary>
+        /// Oyunu duraklatır ya da devam ettirir (P / ESC tuşu).
+        /// Sadece oyun oynanırken veya duraklatılmışken çalışır.
+        /// </summary>
+        public void TogglePause()
+        {
+            if (State == GameState.Playing)
+                State = GameState.Paused;
+            else if (State == GameState.Paused)
+                State = GameState.Playing;
+        }
+
+        /// <summary>Pencere arka plana geçince oyunu otomatik duraklatır.</summary>
+        public void Pause()
+        {
+            if (State == GameState.Playing)
+                State = GameState.Paused;
         }
 
         /// <summary>Oyun döngüsünün bir adımı. Timer her tetiklendiğinde çağrılır.</summary>
