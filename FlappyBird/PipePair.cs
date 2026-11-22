@@ -6,7 +6,8 @@ namespace FlappyBird
     public class PipePair
     {
         public const int Width = 64;
-        public const int GapHeight = 160;   // kuşun geçeceği boşluğun yüksekliği
+        /// <summary>Kuşun geçeceği boşluğun yüksekliği; zorluğa göre değişir.</summary>
+        public int GapHeight { get; set; } = 160;
 
         public float X { get; private set; }
         public int GapTop { get; private set; }   // boşluğun üst kenarının Y değeri

@@ -8,9 +8,9 @@ Bu proje **Nesne Tabanlı Programlama (YMH 219)** dersi ek uygulama ödevi kapsa
 
 ## Ekran Görüntüleri
 
-| Başlangıç | Oyun sırasında | Duraklatıldı | Oyun bitti |
-|---|---|---|---|
-| ![Başlangıç ekranı](screenshots/01-baslangic.png) | ![Oyun sırasında](screenshots/02-oyun.png) | ![Duraklatma ekranı](screenshots/04-duraklatildi.png) | ![Game Over ekranı](screenshots/03-game-over.png) |
+| Başlangıç | Oyun sırasında | Duraklatıldı | Oyun bitti | Zorluk: Zor |
+|---|---|---|---|---|
+| ![Başlangıç ekranı](screenshots/01-baslangic.png) | ![Oyun sırasında](screenshots/02-oyun.png) | ![Duraklatma ekranı](screenshots/04-duraklatildi.png) | ![Game Over ekranı](screenshots/03-game-over.png) | ![Zorluk seçimi](screenshots/05-zorluk-secimi.png) |
 
 ## Kullanılan Teknolojiler
 
@@ -38,6 +38,7 @@ dotnet run --project FlappyBird
 |---|---|
 | `Space` / `↑` / `W` | Zıpla (ilk basışta oyun başlar) |
 | `P` / `Esc` | Oyunu duraklat / devam ettir |
+| `1` / `2` / `3` | Zorluk: Kolay / Orta / Zor (oyun başlamadan önce veya bittikten sonra) |
 | `Enter` / `R` | Oyun bittiyse yeniden başlat |
 | **Yeni Oyun** butonu | Oyunu istediğiniz an baştan başlatır |
 
@@ -50,6 +51,14 @@ dotnet run --project FlappyBird
 - **Seviye sistemi:** her 5 puanda bir seviye atlanır ve oyun hızlanır
 - **En yüksek skor** `highscore.txt` dosyasında saklanır, oyun kapatılsa da kaybolmaz
 - Ekranda seviye, hız, skor ve en yüksek skor bilgisi
+- **Zorluk seçimi:** Kolay / Orta / Zor; her zorluğun başlangıç hızı, seviye başına hız artışı ve borular arasındaki boşluğu farklıdır. Her zorluğun en yüksek skoru ayrı tutulur
+
+  | Zorluk | Başlangıç hızı | Seviye başına artış | Boşluk |
+  |---|---|---|---|
+  | Kolay | 2,8 | 0,3 | 190 px |
+  | Orta | 3,5 | 0,5 | 160 px |
+  | Zor | 4,5 | 0,6 | 130 px |
+
 - **Duraklatma:** `P` / `Esc` ile oyun durur; pencere arka plana geçince oyun otomatik duraklar
 
 ## Proje Yapısı (Sınıflar)
@@ -58,6 +67,7 @@ dotnet run --project FlappyBird
 |---|---|
 | `Bird.cs` | Kuşun konumu, hızı, yer çekimi ve zıplama hareketi |
 | `PipePair.cs` | Üst-alt boru çifti: hareket, ekrandan çıkma ve çarpışma kontrolü |
+| `Difficulty.cs` | Zorluk seviyeleri (Kolay/Orta/Zor) ve her birinin hız, boşluk ve rekor dosyası ayarları |
 | `GameState.cs` | Oyun durumları: `Ready`, `Playing`, `Paused`, `GameOver` |
 | `Game.cs` | Oyun kuralları: döngü adımı, skor, seviye/hız, çarpışma, yeniden başlatma |
 | `HighScoreStore.cs` | En yüksek skoru dosyaya yazma ve dosyadan okuma |
@@ -70,4 +80,4 @@ Form yalnızca olayları yakalar ve çizim yapar; oyunun tüm kuralları `Game` 
 - Ses efekti yoktur.
 - Grafikler resim dosyası yerine basit şekillerle (elips, dikdörtgen) çizilmektedir.
 - Pencere boyutu sabittir (420 × 640).
-- İleride eklenebilecekler: ses efektleri, zorluk seçimi.
+- İleride eklenebilecekler: ses efektleri.

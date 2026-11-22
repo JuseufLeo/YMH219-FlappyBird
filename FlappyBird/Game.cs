@@ -6,15 +6,13 @@ namespace FlappyBird
     /// </summary>
     public class Game
     {
-        private const float StartSpeed = 3.5f;
-        private const float SpeedStep = 0.5f;      // her seviyede eklenen hız
         private const int PointsPerLevel = 5;      // kaç puanda bir seviye atlanır
         private const int PipeCount = 3;
         private const int PipeSpacing = 220;       // iki engel arasındaki yatay mesafe
         private const int MinGapTop = 60;
 
         private readonly Random random = new Random();
-        private readonly HighScoreStore highScoreStore = new HighScoreStore("highscore.txt");
+        private HighScoreStore highScoreStore;
 
         public int Width { get; }
         public int Height { get; }
@@ -28,16 +26,32 @@ namespace FlappyBird
         public int HighScore { get; private set; }
         public float Speed { get; private set; }
         public int Level => Score / PointsPerLevel + 1;
+        /// <summary>Seçili zorluk (varsayılan: Orta).</summary>
+        public Difficulty Difficulty { get; private set; } = Difficulty.Normal;
 
         public Game(int width, int height)
         {
             Width = width;
             Height = height;
             Bird = new Bird(80, height / 2f);
-            HighScore = highScoreStore.Load();
             for (int i = 0; i < PipeCount; i++)
                 Pipes.Add(new PipePair(0, 0));
+            SetDifficulty(Difficulty.Normal);
+        }
+
+        /// <summary>
+        /// Zorluğu değiştirir; sadece oyun başlamadan önce veya oyun bittikten sonra.
+        /// Her zorluğun en yüksek skoru ayrı dosyadan okunur.
+        /// </summary>
+        public bool SetDifficulty(Difficulty difficulty)
+        {
+            if (State == GameState.Playing || State == GameState.Paused)
+                return false;
+            Difficulty = difficulty;
+            highScoreStore = new HighScoreStore(difficulty.HighScoreFile);
+            HighScore = highScoreStore.Load();
             Reset();
+            return true;
         }
 
         /// <summary>Oyunu baştan başlatmaya hazırlar (Yeni Oyun).</summary>
@@ -45,9 +59,12 @@ namespace FlappyBird
         {
             Bird.Reset(80, Height / 2f - Bird.Height);
             Score = 0;
-            Speed = StartSpeed;
+            Speed = Difficulty.StartSpeed;
             for (int i = 0; i < Pipes.Count; i++)
+            {
+                Pipes[i].GapHeight = Difficulty.GapHeight;
                 Pipes[i].Reset(Width + 100 + i * PipeSpacing, RandomGapTop());
+            }
             State = GameState.Ready;
         }
 
@@ -101,7 +118,7 @@ namespace FlappyBird
                 {
                     pipe.Passed = true;
                     Score++;
-                    Speed = StartSpeed + (Level - 1) * SpeedStep;
+                    Speed = Difficulty.StartSpeed + (Level - 1) * Difficulty.SpeedStep;
                 }
 
                 if (pipe.CollidesWith(Bird.Bounds, GroundY))
@@ -136,7 +153,7 @@ namespace FlappyBird
 
         private int RandomGapTop()
         {
-            int maxGapTop = GroundY - PipePair.GapHeight - 60;
+            int maxGapTop = GroundY - Difficulty.GapHeight - 60;
             return random.Next(MinGapTop, maxGapTop);
         }
     }

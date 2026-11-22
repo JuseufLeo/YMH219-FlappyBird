@@ -54,6 +54,20 @@ namespace FlappyBird
                     Invalidate();
                     e.SuppressKeyPress = true;
                     break;
+                case Keys.D1: case Keys.NumPad1:
+                case Keys.D2: case Keys.NumPad2:
+                case Keys.D3: case Keys.NumPad3:
+                    // 1: Kolay, 2: Orta, 3: Zor (sadece oyun başlamadan önce / bittikten sonra)
+                    int index = e.KeyCode switch
+                    {
+                        Keys.D1 or Keys.NumPad1 => 0,
+                        Keys.D2 or Keys.NumPad2 => 1,
+                        _ => 2
+                    };
+                    if (game.SetDifficulty(Difficulty.All[index]))
+                        Invalidate();
+                    e.SuppressKeyPress = true;
+                    break;
                 case Keys.Enter:
                 case Keys.R:
                     if (game.State == GameState.GameOver)
@@ -84,13 +98,14 @@ namespace FlappyBird
             DrawHud(g);
 
             if (game.State == GameState.Ready)
-                DrawMessage(g, 370, "Hazır mısın?", "Zıplamak için SPACE / ↑ tuşuna bas");
+                DrawMessage(g, 370, "Hazır mısın?",
+                    $"Zıplamak için SPACE / ↑ tuşuna bas\nZorluk: {game.Difficulty}   (1: Kolay · 2: Orta · 3: Zor)");
             else if (game.State == GameState.Paused)
                 DrawMessage(g, 180, "DURAKLATILDI",
                     $"Skor: {game.Score}    Seviye: {game.Level}\nDevam etmek için P ya da ESC tuşuna bas");
             else if (game.State == GameState.GameOver)
                 DrawMessage(g, 180, "GAME OVER",
-                    $"Skor: {game.Score}    En yüksek: {game.HighScore}\nYeniden başlamak için ENTER ya da Yeni Oyun");
+                    $"Skor: {game.Score}    En yüksek ({game.Difficulty}): {game.HighScore}\nYeniden başlamak için ENTER ya da Yeni Oyun\nZorluk değiştirmek için 1 / 2 / 3");
 
             base.OnPaint(e);
         }
@@ -156,7 +171,7 @@ namespace FlappyBird
 
             // Durum bilgileri sol üstte
             g.DrawString($"Seviye: {game.Level}   Hız: {game.Speed:0.0}", infoFont, Brushes.Black, 10, 8);
-            g.DrawString($"En yüksek: {game.HighScore}", infoFont, Brushes.Black, 10, 28);
+            g.DrawString($"En yüksek: {game.HighScore}   Zorluk: {game.Difficulty}", infoFont, Brushes.Black, 10, 28);
             if (game.State == GameState.Playing)
                 g.DrawString("P: Duraklat", infoFont, Brushes.Black, game.Width - 95, 8);
         }
